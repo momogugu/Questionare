@@ -52,11 +52,6 @@ class Publish extends React.Component {
         super(props);
         this.disabledDate = this.disabledDate.bind(this);
         this.handleDate = this.handleDate.bind(this);
-        // this.handleTitle = this.handleTitle.bind(this);
-        // this.handleDescription = this.handleDescription.bind(this);
-        // this.handleType = this.handleType.bind(this);
-        // this.handleNecessary = this.handleNecessary.bind(this);
-        // this.handleLabel = this.handleLabel.bind(this);
         this.handleQuestion = this.handleQuestion.bind(this);
         this.handleItem = this.handleItem.bind(this);
         this.handleSave = this.handleSave.bind(this);
@@ -188,40 +183,11 @@ class Publish extends React.Component {
         return current && current.valueOf() < Date.now();
     }
     handleDate(date, dateString) {
+        console.log(date,dateString)
         this.setState({
             deadline: dateString
         });
     }
-    // handleTitle(e) {
-    //     let value = e.target.value;
-    //     this.setState({
-    //         title: value
-    //     });
-    // }
-    // handleDescription(e) {
-    //     let value = e.target.value;
-    //     this.setState({
-    //         description: value
-    //     });
-    // }
-    // handleType(e) {
-    //     let value = e.target.value;
-    //     this.setState({
-    //         type: value
-    //     });
-    // }
-    // handleNecessary(e) {
-    //     let value = e.target.value;
-    //     this.setState({
-    //         necessary: value
-    //     });
-    // }
-    // handleLabel(e) {
-    //     let value = e.target.value;
-    //     this.setState({
-    //         label: value
-    //     });
-    // }
     handleQuestion(e) {
         this.props.form.validateFields(['type', 'label', 'necessary', 'items'],(errors, values) => {
             if (!!errors) {
@@ -278,7 +244,7 @@ class Publish extends React.Component {
         return newArr;
     }
     handleSave(e) {
-        this.props.form.validateFields(['title', 'description'],(errors, values) => {
+        this.props.form.validateFields(['title', 'description', 'deadline'],(errors, values) => {
             if (!!errors) {
                 return;
             }
@@ -288,7 +254,7 @@ class Publish extends React.Component {
                 this.props.projectActions.publish(Object.assign({}, {
                     title: values.title,
                     description: values.description,
-                    deadline: this.state.deadline,
+                    deadline: values.deadline,
                     questions: this.state.questions,
                     userID: this.props.auth.user._id
                 }), () => {
@@ -304,7 +270,7 @@ class Publish extends React.Component {
                 this.props.form.resetFields();
                 return;
             }
-            message.error('请输入问卷题！');
+            message.error('请添加问卷题！');
             return;
         });
     }
@@ -361,6 +327,7 @@ class Publish extends React.Component {
         const deadlineProps = getFieldDecorator('deadline', {
             initialValue: moment().locale('en').utcOffset(0),
             rules: [{
+                type: 'object',
                 required: true,
                 message: 'Please choose your deadline!'
             }]

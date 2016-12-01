@@ -49,30 +49,41 @@ export default class Projects extends React.Component {
 			return;
 		}
 	}
-	handlePublish(status, e){
+	handlePublish(id, status, e){
 		if (status === "待发布") {
-			// this.props.projectActions.updateProject
+			e.preventDefault();
+	        const value = {
+	            _id: id,
+	            status: "已发布"
+	        };
+			this.props.projectActions.updateProject(value);
 			return;
 		} else {
 			message.error('问卷已发布');
 			return;
 		}
 	}
+	handleDelete(id, e) {
+		const value = {
+			_id: id
+		};
+		this.props.projectActions.deleteProject(value);
+	}
 	render() {
 		const {
 			projects
 		} = this.props.project;
+		// console.log(projects);
 		const data = [];
-
-		for (let i = projects.length - 1; i >= 0; i--) {
-            data.push({
+		projects.map((project, i) => {
+			data.unshift({
                 key: projects[i]._id,
                 _id: projects[i]._id,
                 title: projects[i].title,
                 time: (new Date(projects[i].deadline)).toLocaleDateString(),
                 status: projects[i].status
             });
-        }
+		});
 		const pagination = {
 			total: data.length,
 			showSizeChanger: true,
@@ -106,9 +117,9 @@ export default class Projects extends React.Component {
 				<span>
 					<a href="#">编辑问卷</a>
 					<span className="ant-divider"></span>
-					<a href="#">删除问卷</a>
+					<a href="#" onClick={this.handleDelete.bind(this, record._id)}>删除问卷</a>
 					<span className="ant-divider"></span>
-					<a href="#" onClick={this.handlePublish.bind(this, record.status)}>发布问卷</a>
+					<a href="#" onClick={this.handlePublish.bind(this, record._id, record.status)}>发布问卷</a>
 				</span>
 			)
 		}]

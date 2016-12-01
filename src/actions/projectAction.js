@@ -7,7 +7,13 @@ import {
 	GET_PROJECTS_FALIURE,
 	GET_PROJECT_REQUEST,
 	GET_PROJECT_SUCCESS,
-	GET_PROJECT_FALIURE
+	GET_PROJECT_FALIURE,
+	UPDATE_PROJECT_REQUEST,
+	UPDATE_PROJECT_SUCCESS,
+	UPDATE_PROJECT_FAILURE,
+	DELETE_PROJECT_REQUEST,
+	DELETE_PROJECT_SUCCESS,
+	DELETE_PROJECT_FAILURE
 } from '../constants/projectTypes.js';
 import ajax from './apiAction.js';
 import {
@@ -19,7 +25,7 @@ export function publish(data, callback) {
 		types: [PUBLISH_PROJECT_REQUEST, PUBLISH_PROJECT_SUCCESS, PUBLISH_PROJECT_FAILURE],
 		promise() {
 			return ajax({
-				url: '/publish',
+				url: '/projects',
 				method: 'POST',
 				data: data
 			});
@@ -52,7 +58,7 @@ export function getProjects(data, callback) {
 	return {
 		types: [GET_PROJECTS_REQUEST, GET_PROJECTS_SUCCESS, GET_PROJECTS_FALIURE],
 		promise() {
-			console.log(data);
+			// console.log(data);
 			return ajax({
 				url: '/projects',
 				method: 'GET',
@@ -114,4 +120,72 @@ export function getProject(_id, callback) {
 			return err;
 		}
 	};
+}
+
+export function updateProject(data, callback) {
+	return {
+		types: [UPDATE_PROJECT_REQUEST, UPDATE_PROJECT_SUCCESS, UPDATE_PROJECT_FAILURE],
+		promise() {
+			return ajax({
+				url: `/project/${data._id}`,
+				method: 'PUT',
+				data: data
+			});
+		},
+		after() {
+			if (typeof callback === 'function') {
+				callback();
+			}
+		},
+		onData(result) {
+			const {
+				project,
+				success
+			} = result.data;
+			message.success(success);
+			return {
+				project,
+				success
+			};
+		},
+		onError(error) {
+			const err = error.data.error;
+			message.error(err);
+			return err;
+		}
+	}
+}
+
+export function deleteProject(data, callback) {
+	return {
+		types: [DELETE_PROJECT_REQUEST, DELETE_PROJECT_SUCCESS, DELETE_PROJECT_FAILURE],
+		promise() {
+			return ajax({
+				url: `/project/${data._id}`,
+				method: 'DELETE',
+				data: data
+			});
+		},
+		after() {
+			if (typeof callback === 'function') {
+				callback();
+			}
+		},
+		onData(result) {
+			const {
+				_id,
+				success
+			} = result.data;
+			message.success(success);
+			return {
+				_id: _id,
+				success: success
+			};
+		},
+		onError(error) {
+			const err = error.data.error;
+			message.error(err);
+			return err;
+		}
+	}
 }

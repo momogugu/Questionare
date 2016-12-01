@@ -104,7 +104,7 @@ export default function (Router) {
             success: '修改信息成功',
         };
 	});
-	router.post('/publish', async function() {
+	router.post('/projects', async function() {
 		const body = this.request.body;
 		const newProject = await Project.createProject(body);
 		this.body = {
@@ -129,7 +129,7 @@ export default function (Router) {
 			return;
 		} else {
 			publishedProject = await Project.getProjects({
-				status: '待发布'
+				status: '已发布'
 			});
 		}
 			this.body = {
@@ -162,6 +162,30 @@ export default function (Router) {
 				error: 'err'
 			};
 		}
+	});
+	router.put('/project/:_id', async function() {
+		const {
+			_id
+		} = this.params;
+		const body = this.request.body;
+		const result = await Project.updateProject(body);
+        const project = await Project.getProject(_id);
+        this.body = {
+            project: project,
+            success: '成功更新项目状态'
+        };
+	});
+	router.delete('/project/:_id', async function() {
+		const {
+			_id
+		} = this.params;
+		const project = await Project.deleteProject(_id);
+        console.log(project.result);
+
+        this.body = {
+            _id: _id,
+            success: '成功删除项目'
+        };
 	})
 	return router.routes();
 }

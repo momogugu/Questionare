@@ -51,15 +51,13 @@ class Publish extends React.Component {
 	constructor(props) {
         super(props);
         this.disabledDate = this.disabledDate.bind(this);
-        this.handleDate = this.handleDate.bind(this);
         this.handleQuestion = this.handleQuestion.bind(this);
         this.handleItem = this.handleItem.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.state = {
             questions: [],
-            items: [],
-            deadline: ''
-        }
+            items: []
+        };
     }
     componentDidMount() {
         this.loadParticles();
@@ -182,12 +180,6 @@ class Publish extends React.Component {
     disabledDate(current) {
         return current && current.valueOf() < Date.now();
     }
-    handleDate(date, dateString) {
-        console.log(date,dateString)
-        this.setState({
-            deadline: dateString
-        });
-    }
     handleQuestion(e) {
         this.props.form.validateFields(['type', 'label', 'necessary', 'items'],(errors, values) => {
             if (!!errors) {
@@ -248,9 +240,7 @@ class Publish extends React.Component {
             if (!!errors) {
                 return;
             }
-            console.log(this.state.questions.length)
             if (this.state.questions.length) {
-                console.log('wew');
                 this.props.projectActions.publish(Object.assign({}, {
                     title: values.title,
                     description: values.description,
@@ -258,16 +248,8 @@ class Publish extends React.Component {
                     questions: this.state.questions,
                     userID: this.props.auth.user._id
                 }), () => {
-                    this.setState({
-                        questions: [],
-                        question: {},
-                        label: '',
-                        type: 'radio',
-                        items: [],
-                        necessary: true
-                    });
+                    this.context.router.push('/user/projects');
                 });
-                this.props.form.resetFields();
                 return;
             }
             message.error('请添加问卷题！');
@@ -441,7 +423,6 @@ class Publish extends React.Component {
                     </ReactCSSTransitionGroup>
                     <FormItem style={{marginTop: '30px'}} wrapperCol={{span: 8, offset: 2}}>
                         <Button style={{marginRight: '20px'}} onClick={this.handleSave} type="primary">保存问卷</Button>
-                        <Button onClick={this.handleSave} type="ghost">发布问卷</Button>
                     </FormItem>
                     </Form>
                 </div>

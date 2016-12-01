@@ -17,13 +17,15 @@ const Project = {
 		const query = {
 			_id: id
 		};
-		return ProjectModel.update(query, {
-			$set: {
-				isDeleted: true,
-				status: '已删除'
-			}
-		}).exec();
-	}
+		return ProjectModel.remove(query).exec();
+	},
+	updateProject(query) {
+        return ProjectModel
+            .update({
+                _id: query._id
+            }, query)
+            .exec();
+    }
 }
 
 export default Project;

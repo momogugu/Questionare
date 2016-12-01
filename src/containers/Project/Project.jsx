@@ -138,13 +138,10 @@ class Project extends React.Component {
 					                            hasFeedback
 					                        >
 					                            {getFieldDecorator('textarea', {
-													validate: [{
-														rules: [{
-															required: question.necessary,
-															min: 10,
-															message: 'Please input more than 10 words!'
-														}],
-														trigger: 'onBlur'
+													rules: [{
+														required: question.necessary,
+														min: 10,
+														message: 'Please input more than 10 words!'
 													}]
 												})(<Input type="textarea" />)}
 					                        </FormItem>

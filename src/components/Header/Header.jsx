@@ -31,6 +31,7 @@ export default class Header extends React.Component {
 					</Link>
 					<div className="nav">
 						<IndexLink activeClassName="active" className="list" to="/">首页</IndexLink>
+						<Link activeClassName="active" className="list"  to="/publish">新建问卷</Link>
 					</div>
 					{
 						(() => {

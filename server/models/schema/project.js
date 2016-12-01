@@ -15,6 +15,10 @@ const Projectschema = new Schema({
 	status: {
 		type: String,
 		default: '待发布'
+	},
+	views: {
+		type: Number,
+		default: 0
 	}
 });
 

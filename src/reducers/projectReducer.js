@@ -4,7 +4,10 @@ import {
     PUBLISH_PROJECT_FAILURE,
 	GET_PROJECTS_REQUEST,
 	GET_PROJECTS_SUCCESS,
-	GET_PROJECTS_FAILURE
+	GET_PROJECTS_FAILURE,
+	GET_PROJECT_REQUEST,
+	GET_PROJECT_SUCCESS,
+	GET_PROJECT_FALIURE
 } from '../constants/projectTypes.js';
 
 const initialState = {
@@ -20,6 +23,14 @@ export default function project(state = initialState, actions = {}) {
 		error
 	} = actions;
 	switch(type) {
+		case GET_PROJECT_SUCCESS:
+			return {
+				...state,
+				loading: false,
+				error: '',
+				success: result.success,
+				detailProject: result.project
+			}
 		case PUBLISH_PROJECT_SUCCESS:
 			return {
 				...state,
@@ -40,12 +51,14 @@ export default function project(state = initialState, actions = {}) {
 				projects: result.project,
 				publishedProject: result.publishedProject
 			}
+		case GET_PROJECT_REQUEST:
 		case GET_PROJECTS_REQUEST:
 		case PUBLISH_PROJECT_REQUEST:
 			return {
 				...state,
 				loading: true
 			}
+		case GET_PROJECT_FALIURE:
 		case GET_PROJECTS_FAILURE:
 		case PUBLISH_PROJECT_FAILURE:
 			return {

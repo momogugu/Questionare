@@ -112,5 +112,56 @@ export default function (Router) {
 			success: '成功创建新问卷'
 		};
 	});
+	router.get('/projects', async function() {
+		const {
+			userID
+		} = this.query;
+		let project = [];
+		let publishedProject = [];
+		if (userID) {
+			project = await Project.getProjects({
+				userID: userID
+			});
+			this.body = {
+				project: project,
+				success: '成功获取问卷列表'
+			}
+			return;
+		} else {
+			publishedProject = await Project.getProjects({
+				status: '待发布'
+			});
+		}
+			this.body = {
+				publishedProject: publishedProject,
+				success: '成功获取已发布问卷列表'
+			}
+	});
+	router.get('/project/:_id', async function() {
+		const {
+			_id
+		} = this.params;
+		const project = await Project.getProject(_id);
+		if (!project) {
+			this.body = {
+				error: 'project not found'
+			};
+			return;
+		}
+		project.views++;
+		try {
+			const body = {
+				project: project,
+				success: '成功获取问卷详细信息'
+			};
+			this.body = body;
+			project.save();
+		} catch(e) {
+			this.status = 403;
+			this.body = {
+				error: 'err'
+			};
+		}
+	})
 	return router.routes();
 }

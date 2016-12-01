@@ -20,9 +20,10 @@ import Login from './containers/Login/Login.jsx';
 import Register from './containers/Register/Register.jsx';
 import User from './containers/User/User.jsx';
 import Setting from './containers/Setting/Setting.jsx';
-import Project from './containers/Project/Project.jsx';
+import Projects from './containers/Projects/Projects.jsx';
 import Published from './containers/Published/Published.jsx';
 import Publish from './containers/Publish/Publish.jsx';
+import Project from './containers/Project/Project.jsx';
 import NotFound from './containers/NotFound/NotFound.jsx';
 
 import configureStore from './store/configureStore';
@@ -44,10 +45,11 @@ render(
 				<Route path="user" component={User}>
 					<IndexRoute component={Setting} />
 					<Route path="setting" component={Setting} />
-					<Route path="project" component={Project} />
+					<Route path="projects" component={Projects} />
 					<Route path="published" component={Published} />
 				</Route>
 				<Route path="publish" component={Publish} />
+				<Route path="project/:_id" component={Project} />
 				<Route path="*" component={NotFound} />
 			</Route>
 		</Router>

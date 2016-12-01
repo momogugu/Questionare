@@ -53,7 +53,7 @@ export default class User extends React.Component {
 						<Link activeClassName="active" className="item" to="/user/setting">
 							<i className="icon-cog-outline"></i>个人信息设置
 						</Link>
-						<Link activeClassName="active" className="item" to="/user/project">
+						<Link activeClassName="active" className="item" to="/user/projects">
 							<i className="icon-pencil"></i>问卷管理
 						</Link>
 						<Link activeClassName="active" className="item" to="/user/published">

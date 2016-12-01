@@ -42,11 +42,7 @@ export default function project(state = initialState, actions = {}) {
 				...state,
 				loading: false,
 				error: '',
-				success: result.success,
-				projects: [
-					...state.projects,
-					result.project
-				]
+				success: result.success
 			};
 		case GET_PROJECTS_SUCCESS: 
 			return {

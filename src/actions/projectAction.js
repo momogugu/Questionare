@@ -37,12 +37,10 @@ export function publish(data, callback) {
 		},
 		onData(result) {
 			const {
-				project,
 				success
 			} = result.data;
 			message.success(success);
 			return {
-				project,
 				success
 			};
 		},

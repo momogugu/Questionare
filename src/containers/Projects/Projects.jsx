@@ -70,10 +70,11 @@ export default class Projects extends React.Component {
 		this.props.projectActions.deleteProject(value);
 	}
 	render() {
-		const {
+		let {
 			projects
 		} = this.props.project;
 		// console.log(projects);
+		projects = projects || [];
 		const data = [];
 		projects.map((project, i) => {
 			data.unshift({

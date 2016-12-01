@@ -108,7 +108,6 @@ export default function (Router) {
 		const body = this.request.body;
 		const newProject = await Project.createProject(body);
 		this.body = {
-			project: newProject,
 			success: '成功创建新问卷'
 		};
 	});

@@ -43,10 +43,10 @@ export default class Home extends React.Component {
 		return (
 			<div className="home">
 				<Carousel className="banner" effect="fade" autoplay {...settings}>
-					<div><img className="message" src={require('../../static/img/message.png')} /></div>
-					<div><img className="design" src={require('../../static/img/design.png')} /></div>
-					<div><img className="join" src={require('../../static/img/join.png')} /></div>
-					<div><img className="no1" src={require('../../static/img/no1.png')} /></div>
+					<div><img className="message" src={require('../../static/img/2.png')} /></div>
+					<div><img className="design" src={require('../../static/img/1.png')} /></div>
+					<div><img className="join" src={require('../../static/img/3.png')} /></div>
+					<div><img className="no1" src={require('../../static/img/4.png')} /></div>
 				</Carousel>
 				<div className="filter">
 				</div>

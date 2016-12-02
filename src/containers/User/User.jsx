@@ -57,12 +57,27 @@ export default class User extends React.Component {
 							<i className="icon-pencil"></i>问卷管理
 						</Link>
 						<Link activeClassName="active" className="item" to="/user/published">
-							<i className="icon-spin3"></i>已发布问卷
+							<i className="icon-spin3"></i>已截止问卷
 						</Link>
 					</div>
 				</div>
 				<div className="right">
 					<div className="achieve">
+						<div className="title">我的成就</div>
+                        <div className="achieve-content">
+                            <div className="item">
+                                <div className="value">0</div>
+                                <div className="name">已新建问卷</div>
+                            </div>
+                            <div className="item">
+                                <div className="value">0</div>
+                                <div className="name">已发布问卷</div>
+                            </div>
+                            <div className="item">
+                                <div className="value">0</div>
+                                <div className="name">已截止问卷</div>
+                            </div>
+                        </div>
 					</div>
 					<div className="content">
 						{this.props.children}

@@ -8,7 +8,7 @@ const Projectschema = new Schema({
 	deadline: Date,
 	questions: Array,
 	userID: String,
-	isDeleted: {
+	isEnded: {
 		type: Boolean,
 		default: false
 	},

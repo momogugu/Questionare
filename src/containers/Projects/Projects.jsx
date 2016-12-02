@@ -44,8 +44,16 @@ export default class Projects extends React.Component {
 		this.context.router.push('/publish');
 	}
 	handleCheck(status, e){
+		e.preventDefault();
 		if (status === "待发布") {
 			message.error("问卷尚未发布");
+			return;
+		}
+	}
+	handleEdit(id, status, e){
+		e.preventDefault();
+		if (status === "已发布") {
+			message.error('问卷已发布，不能编辑！');
 			return;
 		}
 	}
@@ -96,15 +104,15 @@ export default class Projects extends React.Component {
 			}
 		};
 		const columns = [{
-			title: '标题',
+			title: '问卷标题',
 			dataIndex: 'title',
 			key: 'title'
 		}, {
-			title: '时间',
+			title: '截止日期',
 			dataIndex: 'time',
 			key: 'time'
 		}, {
-			title: '状态',
+			title: '问卷状态',
 			dataIndex: 'status',
 			key: 'status'
 		}, {
@@ -116,7 +124,7 @@ export default class Projects extends React.Component {
 			dataIndex: 'operation',
 			render: (text, record) => (
 				<span>
-					<a href="#">编辑问卷</a>
+					<a href="#" onClick={this.handleEdit.bind(this, record._id, record.status)}>编辑问卷</a>
 					<span className="ant-divider"></span>
 					<a href="#" onClick={this.handleDelete.bind(this, record._id)}>删除问卷</a>
 					<span className="ant-divider"></span>

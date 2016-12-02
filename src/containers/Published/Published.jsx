@@ -19,7 +19,7 @@ export default class Published extends React.Component {
 		return (
 			<div className="published">
 				<div className="title">
-					已发布项目
+					已截止问卷
 				</div>
 			</div>
 		);

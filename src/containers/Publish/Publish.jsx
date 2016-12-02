@@ -13,7 +13,8 @@ import {
     Input,
     Checkbox,
     DatePicker,
-    message
+    message,
+    Icon
 } from 'antd';
 import ReactCSSTransitionGroup from 'react/lib/ReactCSSTransitionGroup';
 import enUS from 'antd/lib/date-picker/locale/en_US';
@@ -29,6 +30,7 @@ const FormItem = Form.Item;
 const Panel = Collapse.Panel;
 const RadioGroup = Radio.Group;
 const CheckboxGroup = Checkbox.Group;
+let uuid = 0;
 
 @connect (
     state => {
@@ -52,12 +54,15 @@ class Publish extends React.Component {
         super(props);
         this.disabledDate = this.disabledDate.bind(this);
         this.handleQuestion = this.handleQuestion.bind(this);
-        this.handleItem = this.handleItem.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.state = {
-            questions: [],
-            items: []
+            questions: []
         };
+    }
+    componentWillMount() {
+        this.props.form.setFieldsValue({
+            keys: [0],
+        });
     }
     componentDidMount() {
         this.loadParticles();
@@ -177,18 +182,42 @@ class Publish extends React.Component {
             "retina_detect": true
         });
     }
+    remove = (k) => {
+        const { form } = this.props;
+        const keys = form.getFieldValue('keys');
+        if (keys.length === 1) {
+            return;
+        }
+        form.setFieldsValue({
+            keys: keys.filter(key => key !== k),
+        });
+    }
+    add = () => {
+        uuid++;
+        const { form } = this.props;
+        const keys = form.getFieldValue('keys');
+        const nextKeys = keys.concat(uuid);
+        form.setFieldsValue({
+            keys: nextKeys,
+        });
+    }
     disabledDate(current) {
         return current && current.valueOf() < Date.now();
     }
     handleQuestion(e) {
-        this.props.form.validateFields(['type', 'label', 'necessary', 'items'],(errors, values) => {
+        const keys = this.props.form.getFieldValue('keys');
+        const items = [];
+        keys.map((k, i) => {
+            items.push(this.props.form.getFieldValue(`names-${k}`));
+            // this.props.form.resetFields(`names-${k}`);
+        });
+        this.props.form.validateFields(['type', 'label', 'necessary'],(errors, values) => {
             if (!!errors) {
                 return;
             }
             const type = values.type;
             const label = values.label;
             const necessary = values.necessary;
-            const items = this.state.items;
             const question = {
                 type: type,
                 label: label,
@@ -197,43 +226,10 @@ class Publish extends React.Component {
             }
             const questions = this.state.questions;
             this.setState({
-                questions: questions.concat(question),
-                items: []
+                questions: questions.concat(question)
             });
-            this.props.form.resetFields(['type', 'label', 'necessary', 'items']);
+            this.props.form.resetFields(['type', 'label', 'necessary']);
         });
-    }
-    handleItem(e) {
-        let items = this.state.items;
-        let str = e.target.value.trim();
-        if (/[,，\s\n]+/.test(str) || e.keyCode ===13) {
-            if (str.length) {
-                var arr = str.split(/,|，|;|；|、|\s|\n|\r|\t/).filter(function (e) {
-                    if (e!=null && e.length>0) {
-                        return true;
-                    } else {
-                        return false;
-                    } 
-                    });
-                items = items.concat(arr);
-                items = this.delRepeat(items);
-                while (items.length > 10) {
-                    items.shift(items[0]);
-                }
-                this.setState({
-                    items: items
-                });
-            } 
-        }
-    }
-    delRepeat(arr) {
-        var newArr = [];
-        for (var i = 0; i < arr.length; i++) {
-            if (newArr.indexOf(arr[i]) === -1) {
-                newArr.push(arr[i]);
-            }   
-        }
-        return newArr;
     }
     handleSave(e) {
         this.props.form.validateFields(['title', 'description', 'deadline'],(errors, values) => {
@@ -257,13 +253,6 @@ class Publish extends React.Component {
         });
     }
 	render() {
-        const items = this.state.items.map((item, i) => {
-            return (
-                <div key={i} className="item">
-                    {item}
-                </div>
-            );
-        });
         const questions = this.state.questions.map((question, i) => {
             return (
                 <div key={i}>
@@ -292,7 +281,8 @@ class Publish extends React.Component {
         });
         const dateFormat = 'YYY/MM/DD';
         const {
-            getFieldDecorator
+            getFieldDecorator,
+            getFieldValue
         } = this.props.form;
         const titleProps = getFieldDecorator('title', {
             rules: [{
@@ -332,12 +322,6 @@ class Publish extends React.Component {
                 message: 'Please Input your question!'
             }]
         });
-        const itemProps = getFieldDecorator('items', {
-            rules: [{
-                required: true,
-                message: "可用空格，逗号，回车来分隔选项"
-            }]
-        });
         const formItemLayout = {
             labelCol: {
                 span: 4
@@ -346,6 +330,37 @@ class Publish extends React.Component {
                 span: 14
             },
         };
+        const formItemLayoutWithOutLabel = {
+            wrapperCol: { span: 20, offset: 4 },
+        };
+        const keys = getFieldValue('keys');
+        const formItems = keys.map((k, index) => {
+          return (
+            <FormItem
+              {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+              label={index === 0 ? 'items' : ''}
+              required={false}
+              key={k}
+            >
+              {getFieldDecorator(`names-${k}`, {
+                validateTrigger: ['onChange', 'onBlur'],
+                rules: [{
+                  required: true,
+                  whitespace: true,
+                  message: "Please input your items or delete this field.",
+                }],
+              })(
+                <Input placeholder="one of your items" style={{ width: '60%', marginRight: 8 }} />
+              )}
+              <Icon
+                className="dynamic-delete-button"
+                type="minus-circle-o"
+                disabled={keys.length === 1}
+                onClick={() => this.remove(k)}
+              />
+            </FormItem>
+          );
+        });
 		return (
 			<div className='auth'>
 				<div id="particles"></div>
@@ -402,16 +417,12 @@ class Publish extends React.Component {
                             >
                                 {labelProps(<Input type="textarea" autosize/>)}
                             </FormItem>
-                            <FormItem
-                                {...formItemLayout}
-                                label="选项"
-                                hasFeedback
-                            >
-                                {itemProps(<Input type="textarea" autosize onBlur={this.handleItem} />)}
+                            {getFieldValue('type') === 'textarea' ? console.log('textarea') : formItems}
+                            <FormItem {...formItemLayoutWithOutLabel}>
+                              <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
+                                <Icon type="plus" /> Add
+                              </Button>
                             </FormItem>
-                                <ReactCSSTransitionGroup transitionName="example">
-                                    {items}
-                                </ReactCSSTransitionGroup>
                             <FormItem
                                 wrapperCol={{span: 8, offset: 4}}>
                                 <Button onClick={this.handleQuestion} type="primary">新建问题</Button>

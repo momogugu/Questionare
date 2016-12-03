@@ -418,11 +418,11 @@ class Publish extends React.Component {
                                 {labelProps(<Input type="textarea" autosize/>)}
                             </FormItem>
                             {getFieldValue('type') === 'textarea' ? console.log('textarea') : formItems}
-                            <FormItem {...formItemLayoutWithOutLabel}>
+                            {getFieldValue('type') === 'textarea' ? console.log('textarea') : (<FormItem {...formItemLayoutWithOutLabel}>
                               <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
                                 <Icon type="plus" /> Add
                               </Button>
-                            </FormItem>
+                            </FormItem>)}
                             <FormItem
                                 wrapperCol={{span: 8, offset: 4}}>
                                 <Button onClick={this.handleQuestion} type="primary">新建问题</Button>

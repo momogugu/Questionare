@@ -14,6 +14,9 @@
 4. npm run dev, 运行客户端
 5. 访问 http://127.0.0.1:8080/
 
+风格参考：
+https://github.com/husterxsp
+
 项目运行截图：
 
 /auth/login
